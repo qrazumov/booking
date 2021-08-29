@@ -1,16 +1,18 @@
 package ru.booking.payload.request;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class BookingRequest {
 
+    @NotEmpty
     private String title;
 
-    @NotBlank
+    @NotNull
     private Date eventStart;
 
-    @NotBlank
+    @NotNull
     private Date eventEnd;
 
     public BookingRequest(String title, Date eventStart, Date eventEnd) {

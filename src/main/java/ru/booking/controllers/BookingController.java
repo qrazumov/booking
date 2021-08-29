@@ -2,6 +2,7 @@ package ru.booking.controllers;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.booking.exception.BookingException;
 import ru.booking.models.Booking;
@@ -25,7 +26,10 @@ public class BookingController {
     }
 
     @PostMapping("/booking")
-    public Booking create(@Valid @RequestBody BookingRequest bookingRequest) throws BookingException, NotFoundException {
+    public Booking create(@Valid @RequestBody BookingRequest bookingRequest, BindingResult bindingResult) throws Exception  {
+        if(bindingResult.hasErrors()){
+            throw new Exception(bindingResult.toString());
+        }
         return bookingService.create(bookingRequest);
     }
 

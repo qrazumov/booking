@@ -58,4 +58,17 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ApiErrorResponse>(apiResponse, HttpStatus.I_AM_A_TEAPOT);
 
     }
+    @ExceptionHandler({Exception.class})
+    private ResponseEntity<ApiErrorResponse> Exception(Exception ex, WebRequest request) {
+        ApiErrorResponse apiResponse = new ApiErrorResponse
+                .ApiErrorResponseBuilder()
+                .withDetail("")
+                .withMessage(ex.getMessage())
+                .withError_code("400")
+                .withStatus(HttpStatus.BAD_REQUEST)
+                .atTime(LocalDateTime.now(ZoneOffset.UTC))
+                .build();
+        return new ResponseEntity<ApiErrorResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+
+    }
 }
