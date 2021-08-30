@@ -31,8 +31,43 @@
           :event-overlap-mode="mode"
           :event-overlap-threshold="30"
           :event-color="getEventColor"
+          @click:event="showEvent"
           locale="ru"
       ></v-calendar>
+      <v-menu
+          v-model="selectedOpen"
+          :close-on-content-click="false"
+          :activator="selectedElement"
+          offset-x
+      >
+        <v-card
+            color="grey lighten-4"
+            min-width="350px"
+            flat
+        >
+          <v-toolbar
+              :color="selectedEvent.color"
+              dark
+          >
+            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <p v-html="selectedEvent.details"></p>
+            <p >Дата начала мероприятия: {{selectedEvent.start}}</p>
+            <p>Дата окончания мероприятия: {{selectedEvent.end}}</p>
+
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+                text
+                color="secondary"
+                @click="selectedOpen = false"
+            >
+              Выход
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
     </v-sheet>
     <AddBooking
         @refresh="refresh"
@@ -60,6 +95,10 @@ export default {
     events: [],
     colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
     booking: [],
+
+    selectedEvent: {},
+    selectedElement: null,
+    selectedOpen: false,
   }),
   methods: {
     getEvents() {
@@ -82,6 +121,23 @@ export default {
 
       })
 
+    },
+    showEvent ({ nativeEvent, event }) {
+      const open = () => {
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        console.log(this.selectedElement)
+        requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+      }
+
+      if (this.selectedOpen) {
+        this.selectedOpen = false
+        requestAnimationFrame(() => requestAnimationFrame(() => open()))
+      } else {
+        open()
+      }
+
+      nativeEvent.stopPropagation()
     },
     getEventColor(event) {
       return event.color
